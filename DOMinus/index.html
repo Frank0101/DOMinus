@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>DOMinus</title>
+    <link href="DOMinus/CSS/dominus.min.css" rel="stylesheet" />
+
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        h3 {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .tools {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+            .tools input {
+                padding: 10px;
+            }
+    </style>
+</head>
+<body>
+    <h3>Base Positioning</h3>
+    <div id="viewport1">
+    </div>
+
+    <h3>Render Loop Animations</h3>
+    <div id="viewport2">
+    </div>
+
+    <h3>Render Loop with Increments</h3>
+    <div id="viewport3">
+    </div>
+
+    <h3>CSS3 Based Animation</h3>
+    <div id="viewport4">
+    </div>
+
+    <h3>KeyFrames Spin Animation</h3>
+    <div id="viewport5">
+    </div>
+
+    <h3>Sprites</h3>
+    <div id="viewport6">
+    </div>
+
+    <h3>Lot of Sprites!</h3>
+    <div id="viewport7">
+    </div>
+    <div class="tools">
+        <input id="command7_1" type="button" value="1 Row More!" />
+        <input id="command7_2" type="button" value="8 Rows More!" />
+    </div>
+
+    <h3>GIF Based Sprites</h3>
+    <div id="viewport8">
+    </div>
+
+    <h3>Shapes Presets</h3>
+    <div id="viewport9">
+    </div>
+
+    <script src="Scripts/jquery-2.1.3.min.js"></script>
+    <!--<script src="DOMinus/JS/DOMinus.min.js"></script>-->
+    <script src="DOMinus/JS/DOMinus.js"></script>
+
+    <script>
+
+        //----------------------------------------------------------------------------------------------------
+        // Base Positioning
+        //----------------------------------------------------------------------------------------------------
+
+        var engine1 = new DOMinus.Engine("#viewport1").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(50, 50).position(10, 10).color("orange")
+        ).addChild(
+            new DOMinus.Node().size(50, 50).position(30, 30).color("red").opacity(0.5)
+        ).addChild(
+            new DOMinus.Node().size(50, 50).position(250, 50).rotation(45).color("green").addChild(
+                new DOMinus.Node().size(50, 50).position(100, 0).rotation(45).color("blue").addChild(
+                    new DOMinus.Node().size(50, 50).position(100, 0).rotation(45).color("yellow").addChild(
+                        new DOMinus.Node().size(50, 50).position(100, 0).rotation(45).color("magenta")
+                            .border(3, "red", "50%")
+                    )
+                )
+            )
+        ).render();
+
+        //----------------------------------------------------------------------------------------------------
+        // Render Loop Animations
+        //----------------------------------------------------------------------------------------------------
+
+        var engine2 = new DOMinus.Engine("#viewport2").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(100, 100).position(0, 150).scale(1, 1).rotation(0).color("lightskyblue")
+        ).renderLoop(function (engine, frame) {
+            var child = engine.getChild(0);
+            if (Math.floor(frame / 540) % 2 == 0) {
+                child.position().sumXY(1, 0);
+                child.scale().sumXY(0.005, 0.005);
+                child.rotation(child.rotation() + 1);
+            } else {
+                child.position().sumXY(-1, 0);
+                child.scale().sumXY(-0.005, -0.005);
+                child.rotation(child.rotation() - 1);
+            }
+            return true;
+        });
+
+        //----------------------------------------------------------------------------------------------------
+        // Render Loop with Increments
+        //----------------------------------------------------------------------------------------------------
+
+        var engine3 = new DOMinus.Engine("#viewport3").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(100, 100).position(0, 150).scale(1, 1).rotation(0).color("red")
+                .positionInc(1, 0).scaleInc(0.005, 0.005).rotationInc(1)
+        ).addChild(
+            new DOMinus.Node().size(100, 100).position(540, 150).scale(1, 1).rotation(0).color("orange")
+                .positionInc(-1, 0).scaleInc(0.005, 0.005).rotationInc(-1)
+        ).renderLoop(function (engine, frame) {
+            if (frame % 540 == 0) {
+                invertIncrements(engine.getChild(0));
+                invertIncrements(engine.getChild(1));
+
+                function invertIncrements(child) {
+                    child.positionInc().mulScalar(-1);
+                    child.scaleInc().mulScalar(-1);
+                    child.rotationInc(child.rotationInc() * -1);
+                }
+            }
+            return true;
+        });
+
+        //----------------------------------------------------------------------------------------------------
+        // CSS3 Based Animation
+        //----------------------------------------------------------------------------------------------------
+
+        var engine4 = new DOMinus.Engine("#viewport4").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(100, 100).position(0, 150).color("orange")
+        ).render();
+
+        function engine4_animateIn() {
+            engine4.getChild(0).position(540, 150).rotation(180).color("red").animate(2, "ease-in-out", engine4_animateOut);
+        }
+        function engine4_animateOut() {
+            engine4.getChild(0).position(0, 150).rotation(0).color("orange").animate(2, "ease-in-out", engine4_animateIn);
+        }
+        engine4_animateIn();
+
+        //----------------------------------------------------------------------------------------------------
+        // KeyFrames Spin Animation
+        //----------------------------------------------------------------------------------------------------
+
+        var engine5 = new DOMinus.Engine("#viewport5").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(100, 100).position(270, 150).color("green")
+        ).render();
+        engine5.getChild(0).setSpin(true);
+
+        //----------------------------------------------------------------------------------------------------
+        // Sprites
+        //----------------------------------------------------------------------------------------------------
+
+        var engine6 = new DOMinus.Engine("#viewport6").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(128, 128).position(256, 136).color("green").sprite("/Images/animations.png", 0, 12, 3)
+        ).renderLoop(function (engine, frame) {
+            if (frame % 100 == 0) {
+                var child = engine.getChild(0);
+                child.sprite().animationRow((child.sprite().animationRow() + 1) % 8);
+            }
+            return true;
+        });
+
+        //----------------------------------------------------------------------------------------------------
+        // Lot of Sprites!
+        //----------------------------------------------------------------------------------------------------
+
+        var engine7_rows = 8, engine7_cols = 8;
+        var engine7_rowsInc = (400 - 128) / (engine7_rows - 1);
+        var engine7_colsInc = (640 - 128) / (engine7_cols - 1);
+        var engine7_row = 0;
+
+        var engine7 = new DOMinus.Engine("#viewport7").size(640, 400).color("black").renderLoop();
+        engine7_arrRows(engine7_rows);
+
+        function engine7_arrRows(numRows) {
+            for (var r = 0; r < numRows; r++) {
+                for (var col = 0; col < engine7_cols; col++) {
+                    engine7.addChild(
+                        new DOMinus.Node().size(128, 128).position(col * engine7_colsInc, engine7_row * engine7_rowsInc)
+                            .color("transparent").sprite("/Images/animations.png", 0, 12, 3)
+                    );
+                }
+                engine7_row++;
+            }
+        }
+        $("#command7_1").click(function () {
+            engine7.size().y(engine7.size().y() + engine7_rowsInc);
+            engine7_arrRows(1);
+        });
+        $("#command7_2").click(function () {
+            engine7.size().y(engine7.size().y() + engine7_rowsInc * 8);
+            engine7_arrRows(8);
+        });
+
+        //----------------------------------------------------------------------------------------------------
+        // GIF Based Sprites
+        //----------------------------------------------------------------------------------------------------
+
+        var engine8 = new DOMinus.Engine("#viewport8").size(640, 400).color("black").addChild(
+            new DOMinus.Node().size(360, 360).position(140, 20).color("transparent").sprite("/Images/animation.gif")
+        ).render();
+        engine8.getChild(0).setSpin(true);
+
+        //----------------------------------------------------------------------------------------------------
+        // Shapes Presets
+        //----------------------------------------------------------------------------------------------------
+
+        var engine9 = new DOMinus.Engine("#viewport9").size(640, 480).color("black").addChild(
+            new DOMinus.Node().setAsRectangle(50, 50, 100, 100, "red")
+        ).addChild(
+            new DOMinus.Node().setAsFilledRectangle(490, 50, 100, 100, "red", "white")
+        ).addChild(
+            new DOMinus.Node().setAsCircle(100, 380, 50, "red", "white")
+        ).addChild(
+            new DOMinus.Node().setAsFilledCircle(540, 380, 50, "red", "white")
+        ).addChild(
+            new DOMinus.Node().setAsLine(250, 250, 390, 230, "red")
+        ).addChild(
+            new DOMinus.Node().setAsLine(390, 250, 250, 230, "red")
+        ).render();
+    </script>
+</body>
+</html>
