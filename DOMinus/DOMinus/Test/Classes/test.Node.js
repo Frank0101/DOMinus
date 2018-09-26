@@ -285,10 +285,10 @@ describe("Node Class", function () {
         model.border(3, "red", "50%");
         model.render(1);
         expect(domElement.css("border")).toBe("3px solid red");
-        expect(domElement.css("border-top-left-radius")).toBe("50% 50%");
-        expect(domElement.css("border-top-right-radius")).toBe("50% 50%");
-        expect(domElement.css("border-bottom-left-radius")).toBe("50% 50%");
-        expect(domElement.css("border-bottom-right-radius")).toBe("50% 50%");
+        expect(domElement.css("border-top-left-radius")).toBe("50%");
+        expect(domElement.css("border-top-right-radius")).toBe("50%");
+        expect(domElement.css("border-bottom-left-radius")).toBe("50%");
+        expect(domElement.css("border-bottom-right-radius")).toBe("50%");
     });
 
     it("It should be able to render the sprite", function () {
